@@ -126,7 +126,7 @@ bool encoder_update_user(uint8_t index, bool clockwise) {
 
 #ifdef OLED_ENABLE
 /*===========================================    OLED CONFIGURATION    ===========================================*/
-bool  oled_horizontal   = true;         // OLED rotation  (true = horizontal,  false = vertical)
+bool  oled_horizontal   = false;         // OLED rotation  (true = horizontal,  false = vertical)
 bool  graph_direction   = false;         // Graph movement  (true = right to left,  false = left to right)
 float graph_top_wpm     = 100.0;        // Minimum WPM required to reach the top of the graph
 int   graph_refresh     = 1000;         // In milliseconds, determines the graph-line frequency
@@ -384,35 +384,21 @@ static void render_wpm_graph(int current_wpm) {
 
 /*========================================    WPM BASED SNAIL ICON    ============================================*/ 
 // Update WPM snail icon
-static void render_wpm_icon(int current_wpm) {
-    // wpm_icon is used to prevent unnecessary redraw
-    if ((current_wpm < icon_med_wpm) && (wpm_icon != 0)) {
-        wpm_icon = 0;
-    } else if ((current_wpm >= icon_med_wpm) && (current_wpm < icon_fast_wpm) && (wpm_icon != 1)) {
-        wpm_icon = 1;
-    } else if ((current_wpm >= icon_fast_wpm) && (wpm_icon != 2)) {
-        wpm_icon = 2;
-    } else {
-        return;
-    }
-    static const char PROGMEM snails[][2][24] = {
-        {{0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0x40, 0x20, 0xA0, 0x20, 0x40, 0x40, 0x80, 0x00, 0x00, 0x00, 0x80, 0x40, 0x20, 0x50, 0x88, 0x04, 0x00, 0x00},
-         {0x40, 0x60, 0x50, 0x4E, 0x51, 0x64, 0x4A, 0x51, 0x54, 0x49, 0x41, 0x62, 0x54, 0x49, 0x46, 0x41, 0x40, 0x30, 0x09, 0x04, 0x02, 0x01, 0x00, 0x00}},
-        {{0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0x40, 0x40, 0x40, 0x40, 0x40, 0x80, 0x80, 0x00, 0x00, 0x00, 0x04, 0x98, 0x60, 0x80, 0x00, 0x00, 0x00, 0x00},
-         {0x60, 0x50, 0x54, 0x4A, 0x51, 0x64, 0x4A, 0x51, 0x55, 0x49, 0x41, 0x62, 0x54, 0x49, 0x46, 0x41, 0x21, 0x10, 0x0A, 0x08, 0x05, 0x02, 0x00, 0x00}},
-        {{0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0x40, 0x40, 0x40, 0x40, 0x80, 0x80, 0x10, 0x10, 0x10, 0x20, 0x40, 0x40, 0xC0, 0x80, 0x80, 0x00, 0x00, 0x00},
-         {0x60, 0x58, 0x54, 0x62, 0x49, 0x54, 0x52, 0x51, 0x55, 0x49, 0x62, 0x52, 0x4D, 0x45, 0x46, 0x22, 0x21, 0x11, 0x10, 0x0A, 0x08, 0x05, 0x02, 0x00}}
+static void render_logo(void) {
+    static const char PROGMEM c64_logo[][2][24] = {
+	{{0xc0, 0xf0, 0xf8, 0xfc, 0x3e, 0x1e, 0x0e, 0x0e, 0x0e, 0x0e, 0x0e, 0x0e, 0x70, 0x70, 0x70, 0x70, 0x30, 0x10, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}, 
+	 {0x03, 0x0f, 0x1f, 0x3f, 0x7c, 0x78, 0x70, 0x70, 0x70, 0x70, 0x70, 0x70, 0x0e, 0x0e, 0x0e, 0x0e, 0x0c, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}}	
     };
     if (oled_horizontal) {
         oled_set_cursor(3, 1);
-        oled_write_raw_P(snails[wpm_icon][0], sizeof(snails[wpm_icon][0]));
-        oled_set_cursor(3, 2);
-        oled_write_raw_P(snails[wpm_icon][1], sizeof(snails[wpm_icon][1]));
+        oled_write_raw_P(c64_logo[0][0], sizeof(c64_logo[0][0]));
+	oled_set_cursor(3, 2);
+	oled_write_raw_P(c64_logo[0][1], sizeof(c64_logo[0][1]));
     } else {
         oled_set_cursor(0, 11);
-        oled_write_raw_P(snails[wpm_icon][0], sizeof(snails[wpm_icon][0]));
-        oled_set_cursor(0, 12);
-        oled_write_raw_P(snails[wpm_icon][1], sizeof(snails[wpm_icon][1]));
+	oled_write_raw_P(c64_logo[0][0], sizeof(c64_logo[0][0]));
+	oled_set_cursor(0, 12);
+	oled_write_raw_P(c64_logo[0][1], sizeof(c64_logo[0][1]));
     }
 }
 /*================================================================================================================*/
@@ -432,7 +418,7 @@ bool oled_task_user(void) {
     // Update WPM counters
     render_wpm_counters(current_wpm);
     // Update WPM snail icon
-    render_wpm_icon(current_wpm);
+    render_logo();
     // Update WPM graph every graph_refresh milliseconds
     if (timer_elapsed(timer) > graph_refresh) {
         render_wpm_graph(current_wpm);
