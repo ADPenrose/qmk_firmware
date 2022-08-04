@@ -1,0 +1,17 @@
+{
+    "manufacturer": "Arturo Avila",
+    "keyboard_name": "MCP",
+    "maintainer": "ADPenrose",
+    "usb": {
+        "device_version": "1.0.0",
+        "pid": "0x4450",
+        "vid": "0x0004"
+    },
+    "layouts": {
+        "LAYOUT_all": {
+            "layout": [
+            {"label":"7", "x":0, "y":0}, {"label":"8", "x":1, "y":0}, {"label":"4", "x":0, "y":1}, {"label":"5", "x":1, "y":1}
+	    ]
+        }
+    }
+}
