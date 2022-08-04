@@ -16,3 +16,10 @@ NKRO_ENABLE = no            # Enable N-Key Rollover
 BACKLIGHT_ENABLE = no       # Enable keyboard backlight functionality
 RGBLIGHT_ENABLE = no       # Enable keyboard RGB underglow
 AUDIO_ENABLE = no           # Audio output
+
+# custom matrix setup
+CUSTOM_MATRIX = lite
+
+VPATH += drivers/gpio
+SRC += mcp23018.c matrix.c
+QUANTUM_LIB_SRC += i2c_master.c
