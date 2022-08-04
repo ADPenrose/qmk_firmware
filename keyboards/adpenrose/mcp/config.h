@@ -7,7 +7,7 @@
 
 /* key matrix size */
 #define MATRIX_ROWS 2
-#define MATRIX_COLS 2
+#define MATRIX_COLS 4
 
 /*
  * Keyboard Matrix Assignments
@@ -19,8 +19,8 @@
  *                  ROW2COL = ROW = Anode (+), COL = Cathode (-, marked on diode)
  *
  */
-#define MATRIX_ROW_PINS { D7, E6 }
-#define MATRIX_COL_PINS { B4, B5 }
+#define MATRIX_ROW_PINS { D4, C6 }
+#define MATRIX_COL_PINS { B3, B1, B2, B6  }
 
 /* COL2ROW, ROW2COL */
 #define DIODE_DIRECTION COL2ROW
