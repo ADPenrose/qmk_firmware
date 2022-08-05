@@ -16,9 +16,12 @@ NKRO_ENABLE = no            # Enable N-Key Rollover
 BACKLIGHT_ENABLE = no       # Enable keyboard backlight functionality
 RGBLIGHT_ENABLE = no       # Enable keyboard RGB underglow
 AUDIO_ENABLE = no           # Audio output
+OLED_ENABLE = yes
+OLED_DRIVER = SSD1306
 
 # custom matrix setup
 CUSTOM_MATRIX = lite
 
-SRC += matrix.c
+SRC += matrix.c bongocat.c 
+       
 QUANTUM_LIB_SRC += i2c_master.c
