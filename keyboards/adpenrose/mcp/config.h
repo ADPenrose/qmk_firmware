@@ -21,7 +21,7 @@
 #define MATRIX_COL_PINS_MCU \
     { C6, D7 }
 #define UNUSED_PINS_MCU \
-    { D2, D3, D4, E6, B4, B5, B6, B1, F7, F6, F5, F4 }
+    { D2, D3, D4, E6, B4, B5, B6, B1, F7, F6 }
 #define MATRIX_ROW_PINS_MCP \
     { B0, B1 }
 #define MATRIX_COL_PINS_MCP \
@@ -32,10 +32,16 @@
 /* COL2ROW, ROW2COL*/
 #define DIODE_DIRECTION COL2ROW
 
+/*Rotary encoder - set the resolution fitting your encoder.
+Most will need a value of 4. If 1 encoder click results in 2 keycodes sent
+increase the value. If you need 2 clicks for 1 keycode, decrease*/
+#define ENCODER_RESOLUTION 4
+#define ENCODERS_PAD_A { F4 }
+#define ENCODERS_PAD_B { F5 }
+#define TAP_CODE_DELAY 10
+
 /* define if matrix has ghost (lacks anti-ghosting diodes) */
 //#define MATRIX_HAS_GHOST
 
 /* Debounce reduces chatter (unintended double-presses) - set 0 if debouncing is not needed */
 #define DEBOUNCE 5
-
-#define OLED_TIMEOUT 60000
