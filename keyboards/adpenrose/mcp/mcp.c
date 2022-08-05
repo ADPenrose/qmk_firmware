@@ -3,6 +3,3 @@
 
 #include "mcp.h"
 
-void keyboard_post_init_kb(void) {
-    keyboard_post_init_user();
-}
