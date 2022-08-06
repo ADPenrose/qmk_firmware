@@ -17,11 +17,11 @@
 
 // wiring
 #define MATRIX_ROW_PINS_MCU \
-    { B3, B2 }
+    { B3, B6 }
 #define MATRIX_COL_PINS_MCU \
     { C6, D7 }
 #define UNUSED_PINS_MCU \
-    { D2, D3, D4, E6, B4, B5, B6, B1, F7, F6 }
+    { D2, D3, D4, E6, B4, B5, F4, F5, F6, F7 }
 #define MATRIX_ROW_PINS_MCP \
     { B0, B1 }
 #define MATRIX_COL_PINS_MCP \
@@ -32,12 +32,9 @@
 /* COL2ROW, ROW2COL*/
 #define DIODE_DIRECTION COL2ROW
 
-/*Rotary encoder - set the resolution fitting your encoder.
-Most will need a value of 4. If 1 encoder click results in 2 keycodes sent
-increase the value. If you need 2 clicks for 1 keycode, decrease*/
-#define ENCODER_RESOLUTION 4
-#define ENCODERS_PAD_A { F4 }
-#define ENCODERS_PAD_B { F5 }
+#define ENCODER_RESOLUTION 2
+#define ENCODERS_PAD_A { B1 }
+#define ENCODERS_PAD_B { B2 }
 #define TAP_CODE_DELAY 10
 
 /* define if matrix has ghost (lacks anti-ghosting diodes) */
