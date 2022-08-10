@@ -66,3 +66,16 @@ bool oled_task_kb(void) {
     return true;
 }
 #endif
+
+bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
+    switch(keycode) {
+        case KC_LSFT:
+            if (record->event.pressed) {
+		writePinHigh(LED1);          
+	    } else {
+		writePinLow(LED1);
+	    }
+            return true;
+    }
+    return process_record_user(keycode, record);
+};

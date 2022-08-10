@@ -12,7 +12,7 @@
 #define MATRIX_ROWS_PER_SIDE (MATRIX_ROWS / 2)
 #define MATRIX_COLS_PER_SIDE (MATRIX_COLS / 2)
 
-#define UNUSED_MCU 12
+#define UNUSED_MCU 9
 #define UNUSED_MCP 12
 
 // wiring
@@ -21,7 +21,7 @@
 #define MATRIX_COL_PINS_MCU \
     { C6, D7 }
 #define UNUSED_PINS_MCU \
-    { D2, D3, D4, E6, B4, B5, F4, F5, F6, F7 }
+    { D2, D3, D4, E6, B4, F4, F5, F6, F7 }
 #define MATRIX_ROW_PINS_MCP \
     { B0, B1 }
 #define MATRIX_COL_PINS_MCP \
@@ -42,3 +42,4 @@
 
 /* Debounce reduces chatter (unintended double-presses) - set 0 if debouncing is not needed */
 #define DEBOUNCE 5
+
