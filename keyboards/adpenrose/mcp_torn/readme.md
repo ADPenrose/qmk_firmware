@@ -1,4 +1,4 @@
-# adpenrose/mcp_torn
+# mcp_torn
 
 ![adpenrose/mcp_torn](imgur.com image replace me!)
 
