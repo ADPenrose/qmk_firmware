@@ -1,0 +1,15 @@
+{
+    "manufacturer": "Arturo Avila",
+    "keyboard_name": "MCP",
+    "maintainer": "ADPenrose",
+    "usb": {
+        "device_version": "1.0.0",
+        "pid": "0x4450",
+        "vid": "0x0004"
+    },
+    "layouts": {
+        "LAYOUT_all": {
+            "layout": [{"label":"Insert", "x":0, "y":0}, {"label":"Home", "x":1, "y":0}, {"label":"PgUp", "x":2.5, "y":0}, {"label":"Num Lock", "x":3.5, "y":0}, {"label":"Delete", "x":0, "y":1}, {"label":"End", "x":1, "y":1}, {"label":"PgDn", "x":2.5, "y":1}, {"label":"7", "x":3.5, "y":1}]
+        }
+    }
+}
