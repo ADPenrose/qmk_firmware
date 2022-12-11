@@ -4,8 +4,8 @@
     "maintainer": "Arturo Avila",
     "usb": {
         "device_version": "1.0.0",
-        "pid": "0x4450",
-        "vid": "0x0005"
+        "pid": "0x0005",
+        "vid": "0x4450"
     },
     "layouts": {
         "LAYOUT_65_ansi": {
