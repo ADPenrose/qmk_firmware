@@ -7,10 +7,10 @@
 
 /* Key Matrix size */
 #define MATRIX_ROWS 12
-#define MATRIX_COLS 16
+#define MATRIX_COLS 8
 
 #define MATRIX_ROWS_PER_SIDE (MATRIX_ROWS / 2)
-#define MATRIX_COLS_PER_SIDE (MATRIX_COLS / 2)
+#define MATRIX_COLS_PER_SIDE MATRIX_COLS
 
 #define UNUSED_MCU
 #define UNUSED_MCP 2
