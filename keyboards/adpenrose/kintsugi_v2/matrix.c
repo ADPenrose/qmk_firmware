@@ -62,69 +62,7 @@ uint8_t init_mcp23017(void) {
 
 /* Matrix state(1:on, 0:off) */
 static matrix_row_t matrix[MATRIX_ROWS];  // Debounced values.
-
-static matrix_row_t read_cols(uint8_t row);
-static void         init_cols(void);
-static void         unselect_rows(void);
-static void         select_row(uint8_t row);
-
 static uint8_t mcp23017_reset_loop;
-
-void matrix_init_custom(void) {
-    // Initialize Row and Col:
-    mcp23017_status = init_mcp23017();
-
-    unselect_rows();
-    init_cols();
-
-    // Initialize matrix state - All keys off:
-    for (uint8_t i = 0; i < MATRIX_ROWS; i++) {
-        matrix[i] = 0;
-    }
-}
-
-// Reads and stores a row, returning whether a change occurred.
-static inline bool store_matrix_row(matrix_row_t current_matrix[], uint8_t index) {
-    matrix_row_t temp = read_cols(index);
-    if (current_matrix[index] != temp) {
-        current_matrix[index] = temp;
-        return true;
-    }
-    return false;
-}
-
-bool matrix_scan_custom(matrix_row_t current_matrix[]) {
-    if (mcp23017_status) {  // If there was an error...
-        if (++mcp23017_reset_loop == 0) {
-            // Since MCP23017_reset_loop is 8 bit - we'll try to reset once in 255 matrix scans.
-            // This will be approx. a bit more frequent than once per second.
-            dprint("Trying to reset MCP23017...\n");
-            mcp23017_status = init_mcp23017();
-            if (mcp23017_status) {
-                dprint("Right side not responding.\n");
-            } else {
-                dprint("Right side attached.\n");
-            }
-        }
-    }
-
-    bool matrix_has_changed = false;
-    for (uint8_t i = 0; i < MATRIX_ROWS_PER_SIDE; i++) {
-        // Select rows from left and right hands:
-        uint8_t left_index  = i;
-        uint8_t right_index = i + MATRIX_ROWS_PER_SIDE;
-        select_row(left_index);
-        select_row(right_index);
-
-        // We don't need a 30us delay anymore, because selecting a left-hand row requires more than 30us for i2c.
-        matrix_has_changed |= store_matrix_row(current_matrix, left_index);
-        matrix_has_changed |= store_matrix_row(current_matrix, right_index);
-
-        unselect_rows();
-    }
-
-    return matrix_has_changed;
-}
 
 static void init_cols(void) {
     // Init on MCU:
@@ -135,6 +73,26 @@ static void init_cols(void) {
         writePinHigh(pin);
     }
     // Init on MCP23017 not needed. Already done as part of init_mcp23017().
+}
+
+static void select_row(uint8_t row) {
+    if (row < MATRIX_ROWS_PER_SIDE) {
+        // Select on MCU:
+        pin_t matrix_row_pins_mcu[MATRIX_ROWS_PER_SIDE] = MATRIX_ROW_PINS_MCU;
+        pin_t pin                                       = matrix_row_pins_mcu[row];
+        setPinOutput(pin);
+        writePinLow(pin);
+    } else {
+        // Select on MCP23017:
+        if (mcp23017_status) {  // If there was an error...
+                                // Do nothing.
+        } else {
+            // Select the desired row by writing a byte for the entire GPIOB bus where only the bit representing the row we want to select is a zero (write instruction) and every other bit is a one.
+            // Note that the row - MATRIX_ROWS_PER_SIDE reflects the fact that being on the right hand, the columns are numbered from MATRIX_ROWS_PER_SIDE to MATRIX_ROWS, but the pins we want to write to are indexed from zero up on the GPIOB bus.
+            uint8_t buf[]   = {GPIOB, 0xFF & ~(1 << (row - MATRIX_ROWS_PER_SIDE))};
+            mcp23017_status = i2c_transmit(I2C_ADDR_WRITE, buf, sizeof(buf), I2C_TIMEOUT);
+        }
+    }
 }
 
 static matrix_row_t read_cols(uint8_t row) {
@@ -170,24 +128,14 @@ static matrix_row_t read_cols(uint8_t row) {
     }
 }
 
-static void select_row(uint8_t row) {
-    if (row < MATRIX_ROWS_PER_SIDE) {
-        // Select on MCU:
-        pin_t matrix_row_pins_mcu[MATRIX_ROWS_PER_SIDE] = MATRIX_ROW_PINS_MCU;
-        pin_t pin                                       = matrix_row_pins_mcu[row];
-        setPinOutput(pin);
-        writePinLow(pin);
-    } else {
-        // Select on MCP23017:
-        if (mcp23017_status) {  // If there was an error...
-                                // Do nothing.
-        } else {
-            // Select the desired row by writing a byte for the entire GPIOB bus where only the bit representing the row we want to select is a zero (write instruction) and every other bit is a one.
-            // Note that the row - MATRIX_ROWS_PER_SIDE reflects the fact that being on the right hand, the columns are numbered from MATRIX_ROWS_PER_SIDE to MATRIX_ROWS, but the pins we want to write to are indexed from zero up on the GPIOB bus.
-            uint8_t buf[]   = {GPIOB, 0xFF & ~(1 << (row - MATRIX_ROWS_PER_SIDE))};
-            mcp23017_status = i2c_transmit(I2C_ADDR_WRITE, buf, sizeof(buf), I2C_TIMEOUT);
-        }
+// Reads and stores a row, returning whether a change occurred.
+static inline bool store_matrix_row(matrix_row_t current_matrix[], uint8_t index) {
+    matrix_row_t temp = read_cols(index);
+    if (current_matrix[index] != temp) {
+        current_matrix[index] = temp;
+        return true;
     }
+    return false;
 }
 
 static void unselect_rows(void) {
@@ -201,4 +149,50 @@ static void unselect_rows(void) {
     // No need to unselect on MCP23017, because the select step sets all
     // the other row bits high, and it's not changing to a different
     // direction.
+}
+
+void matrix_init_custom(void) {
+    // Initialize Row and Col:
+    mcp23017_status = init_mcp23017();
+
+    unselect_rows();
+    init_cols();
+
+    // Initialize matrix state - All keys off:
+    for (uint8_t i = 0; i < MATRIX_ROWS; i++) {
+        matrix[i] = 0;
+    }
+}
+
+bool matrix_scan_custom(matrix_row_t current_matrix[]) {
+    if (mcp23017_status) {  // If there was an error...
+        if (++mcp23017_reset_loop == 0) {
+            // Since MCP23017_reset_loop is 8 bit - we'll try to reset once in 255 matrix scans.
+            // This will be approx. a bit more frequent than once per second.
+            dprint("Trying to reset MCP23017...\n");
+            mcp23017_status = init_mcp23017();
+            if (mcp23017_status) {
+                dprint("Right side not responding.\n");
+            } else {
+                dprint("Right side attached.\n");
+            }
+        }
+    }
+
+    bool matrix_has_changed = false;
+    for (uint8_t i = 0; i < MATRIX_ROWS_PER_SIDE; i++) {
+        // Select rows from left and right hands:
+        uint8_t left_index  = i;
+        uint8_t right_index = i + MATRIX_ROWS_PER_SIDE;
+        select_row(left_index);
+        select_row(right_index);
+
+        // We don't need a 30us delay anymore, because selecting a left-hand row requires more than 30us for i2c.
+        matrix_has_changed |= store_matrix_row(current_matrix, left_index);
+        matrix_has_changed |= store_matrix_row(current_matrix, right_index);
+
+        unselect_rows();
+    }
+
+    return matrix_has_changed;
 }
