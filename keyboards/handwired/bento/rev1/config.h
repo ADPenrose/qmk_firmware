@@ -16,9 +16,12 @@
 
 #pragma once
 
+#define BACKLIGHT_PIN B6
+#define BACKLIGHT_LEVELS 7
+
 #define RGB_DI_PIN D3
 #ifdef RGB_DI_PIN
-  #define RGBLED_NUM 4
+  #define RGBLED_NUM 11
   #define RGBLIGHT_HUE_STEP 8
   #define RGBLIGHT_SAT_STEP 8
   #define RGBLIGHT_VAL_STEP 8
@@ -34,9 +37,19 @@
 #define RGBLIGHT_EFFECT_RGB_TEST
 #define RGBLIGHT_EFFECT_ALTERNATING
 #define RGBLIGHT_EFFECT_TWINKLE
+#    define RGBLIGHT_LAYERS
 #endif
 
 /* Mechanical locking support. Use KC_LCAP, KC_LNUM or KC_LSCR instead in keymap */
 #define LOCKING_SUPPORT_ENABLE
 /* Locking resynchronize hack */
 #define LOCKING_RESYNC_ENABLE
+
+#define ENCODERS_PAD_A {F5}
+#define ENCODERS_PAD_B {D1}
+
+/* Debounce reduces chatter (unintended double-presses) - set 0 if debouncing is not needed */
+#define DEBOUNCE 5
+
+#define TAPPING_TERM 175
+#define TAPPING_TERM_PER_KEY
