@@ -81,7 +81,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      */
     [0] = LAYOUT(
         KC_COPY, KC_CUT, KC_MUTE,
-        KC_PASTE, KC_LCAP, TD(TD_L1_L0)
+        KC_PASTE, KC_LCAP, TG(1)
     ),
     /*
         |               |                        | Knob : Vol Up/Dn|
@@ -90,7 +90,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      */
     [1] = LAYOUT(
         KC_MPRV, KC_MNXT, RGB_TOG,
-        KC_MPLY, KC_MSEL, TD(TD_L2_L0)
+        KC_MPLY, KC_MSEL, TG(2)
     ),
     /*
         |               |                 |               |
@@ -99,7 +99,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      */
    [2] = LAYOUT(
         KC_SS, KC_AT, ALT_TAB,
-        KC_CALC, KC_LOVE, TD(TD_L3_L0)
+        KC_CALC, KC_LOVE, TG(3)
     ),
     /* 
         |                   |                              |               |
@@ -108,7 +108,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      */
     [3] = LAYOUT(
         RGB_MODE_FORWARD, RGB_MODE_REVERSE, RGB_TOG,
-        RGB_HUI, RGB_SAI,  RGB_VAI
+        RGB_HUI, RGB_SAI,  TG(0)
     ),
 
 };
