@@ -27,26 +27,8 @@ uint16_t alt_tab_timer = 0;     // we will be using them soon.
   ALT_TAB_R,
   ALT_TAB_L,
   KC_SS,
-  KC_LOVE
+  KC_LOVE,
 };
-
-// Tap Dance declarations
-enum {
-    TD_L1_L0,
-    TD_L2_L0,
-    TD_L3_L0
-};
-
-// Tap Dance definitions
-tap_dance_action_t tap_dance_actions[] = {
-    // Tap once for L1, twice for L0
-    [TD_L1_L0] = ACTION_TAP_DANCE_DOUBLE(TG(1), TG(0)),
-    // Tap once for L2, twice for L0
-    [TD_L2_L0] = ACTION_TAP_DANCE_DOUBLE(TG(2), TG(0)),
-    // Tap once for L3, twice for L0
-    [TD_L3_L0] = ACTION_TAP_DANCE_DOUBLE(TG(3), TG(0)),
-};
-
 
 // Light LEDs 1 to 16 green when caps lock is active. Hard to ignore!
 const rgblight_segment_t PROGMEM my_capslock_layer[] = RGBLIGHT_LAYER_SEGMENTS(
@@ -81,7 +63,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      */
     [0] = LAYOUT(
         KC_COPY, KC_CUT, KC_MUTE,
-        KC_PASTE, KC_LCAP, TG(1)
+        KC_PASTE, KC_LCAP, TO(1)
     ),
     /*
         |               |                        | Knob : Vol Up/Dn|
@@ -90,7 +72,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      */
     [1] = LAYOUT(
         KC_MPRV, KC_MNXT, RGB_TOG,
-        KC_MPLY, KC_MSEL, TG(2)
+        KC_MPLY, KC_MSEL, TO(2)
     ),
     /*
         |               |                 |               |
@@ -99,7 +81,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      */
    [2] = LAYOUT(
         KC_SS, KC_AT, ALT_TAB,
-        KC_CALC, KC_LOVE, TG(3)
+        KC_CALC, KC_LOVE, TO(3)
     ),
     /* 
         |                   |                              |               |
@@ -108,7 +90,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      */
     [3] = LAYOUT(
         RGB_MODE_FORWARD, RGB_MODE_REVERSE, RGB_TOG,
-        RGB_HUI, RGB_SAI,  TG(0)
+        RGB_HUI, RGB_SAI,  TO(0)
     ),
 
 };
@@ -143,23 +125,27 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         if (record->event.pressed && is_alt_tab_active == true) {
         tap_code(KC_RIGHT);
         alt_tab_timer = timer_read();
-      }
+        }
         break;
     case ALT_TAB_L:
         if (record->event.pressed && is_alt_tab_active == true) {
         tap_code(KC_LEFT);
         alt_tab_timer = timer_read();
-      }
+        }
         break;
     case KC_SS:
         if (record->event.pressed) {
-          SEND_STRING(SS_DOWN(X_LGUI) SS_DOWN(X_LSFT) "s");
-      }
+          SEND_STRING(SS_LGUI(SS_LSFT("s")));
+        } else {
+            // when keycode is released
+        }
         break;
     case KC_LOVE:
         if (record->event.pressed) {
           SEND_STRING("Te amo Fernandita");
-      }
+        } else {
+            // when keycode is released
+        }
         break;
   }
     return true;
