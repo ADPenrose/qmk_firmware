@@ -22,3 +22,4 @@
 
 /* Solenoid pin */
 #define SOLENOID_PIN C5
+#define HAPTIC_ENABLE_PIN B5
