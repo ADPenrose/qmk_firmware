@@ -7,8 +7,6 @@
         "pid": "0x0005",
         "vid": "0x4450"
     },
-    "processor": "RP2040",
-    "bootloader": "rp2040",
     "layouts": {
         "LAYOUT_65_ansi": {
             "layout": [
